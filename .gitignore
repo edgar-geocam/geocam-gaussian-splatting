@@ -1,0 +1,27 @@
+# Data and output directories (large, user-specific)
+data/
+output/
+production-downloads/
+
+# Docker build cache
+gaussian-splatting/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Experiment scripts (user-specific)
+run_*_experiments.sh
+
+# Training results (user-specific)
+training_results.csv

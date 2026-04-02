@@ -1,0 +1,87 @@
+# Copy this file to docker-compose.yml and update the volume mounts for your data.
+#
+# Build all images:     docker compose build
+# Build one image:      docker compose build 3dgs
+# Run interactive:      sudo docker compose run --rm 3dgs bash
+# Run training:         sudo docker compose run --rm 3dgs python gaussian-splatting/train.py ...
+
+services:
+  3dgs:
+    build:
+      context: ./gaussian-splatting
+      dockerfile: Dockerfile
+    image: 3dgs:latest
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./output:/workspace/output
+      # Add prepared data directories (one per dataset):
+      # - ./data/your-dataset:/workspace/data/your-dataset
+      # Add source image mount for symlink resolution (absolute path, read-only):
+      # - /absolute/path/to/source/images:/absolute/path/to/source/images:ro
+
+  gsplat:
+    build:
+      context: .
+      dockerfile: dockerfiles/gsplat.Dockerfile
+    image: gsplat:latest
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./output:/workspace/output
+      # - ./data/your-dataset:/workspace/data/your-dataset
+      # - /absolute/path/to/source/images:/absolute/path/to/source/images:ro
+
+  2dgs:
+    build:
+      context: .
+      dockerfile: dockerfiles/2dgs.Dockerfile
+    image: 2dgs:latest
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./output:/workspace/output
+      # - ./data/your-dataset:/workspace/data/your-dataset
+      # - /absolute/path/to/source/images:/absolute/path/to/source/images:ro
