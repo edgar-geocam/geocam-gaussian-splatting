@@ -12,6 +12,8 @@ services:
       dockerfile: Dockerfile
     image: 3dgs:latest
     runtime: nvidia
+    mem_limit: 26g        # Adjust: total RAM minus ~5 GB
+    memswap_limit: 30g    # Adjust: mem_limit + swap overflow
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     ulimits:
@@ -40,6 +42,8 @@ services:
       dockerfile: dockerfiles/gsplat.Dockerfile
     image: gsplat:latest
     runtime: nvidia
+    mem_limit: 26g
+    memswap_limit: 30g
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     ulimits:
@@ -66,6 +70,8 @@ services:
       dockerfile: dockerfiles/2dgs.Dockerfile
     image: 2dgs:latest
     runtime: nvidia
+    mem_limit: 26g
+    memswap_limit: 30g
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     ulimits:
