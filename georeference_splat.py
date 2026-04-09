@@ -149,10 +149,12 @@ def parse_crs_json(crs_path):
 
     if crs_str:
         # Try to extract UTM zone from WKT or EPSG
-        zone_match = re.search(r'UTM zone (\d+)([NS])', crs_str)
+        # Match various UTM zone formats:
+        #   "UTM zone 10N", "UTM Zone 10, Northern Hemisphere", etc.
+        zone_match = re.search(r'UTM [Zz]one (\d+)', crs_str)
         if zone_match:
             utm_zone = int(zone_match.group(1))
-            northern = zone_match.group(2) == 'N'
+            northern = 'South' not in crs_str and 'south' not in crs_str
 
         # Extract EPSG for the projected CRS (the last AUTHORITY in the WKT)
         epsg_matches = re.findall(r'AUTHORITY\["EPSG","(\d+)"\]', crs_str)

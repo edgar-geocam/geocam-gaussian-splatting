@@ -20,4 +20,8 @@ RUN pip3 install gsplat==1.4.0
 # Install nerfstudio
 RUN pip3 install nerfstudio
 
+# Pre-compile gsplat CUDA extensions so they don't JIT-compile at runtime
+# (JIT compilation of 26 kernels x 6 architectures can OOM on small machines)
+RUN python3 -c "from gsplat.cuda._wrapper import _make_lazy_cuda_obj; from gsplat.cuda._backend import _C; print('gsplat CUDA extensions compiled')"
+
 CMD ["bash"]

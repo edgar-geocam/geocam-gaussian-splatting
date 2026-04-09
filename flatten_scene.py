@@ -154,6 +154,7 @@ def main():
     parser.add_argument('--num-chunks', type=int, default=0, help='Split into N consecutive chunks (0 = no chunking)')
     parser.add_argument('--chunk', type=int, default=-1, help='Only create this specific chunk (0-indexed)')
     parser.add_argument('--every', type=int, default=1, help='Take every Nth image (1 = all images)')
+    parser.add_argument('--filter', type=str, default=None, help='CSV file with a Name column of image paths to include')
     args = parser.parse_args()
 
     source = Path(args.source)
@@ -176,6 +177,17 @@ def main():
     print('Parsing points3D.txt...')
     all_points = parse_points3d_txt(sparse_dir / 'points3D.txt')
     print(f'  Found {len(all_points)} points')
+
+    # Filter by CSV file if requested
+    if args.filter:
+        import csv
+        filter_path = Path(args.filter)
+        with open(filter_path, 'r') as f:
+            reader = csv.DictReader(f)
+            allowed = set(row['Name'] for row in reader)
+        before = len(entries)
+        entries = [e for e in entries if e[2] in allowed]
+        print(f'  Filtered to {len(entries)}/{before} images (from {filter_path.name})')
 
     # Subsample if requested
     if args.every > 1:

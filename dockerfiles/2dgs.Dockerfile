@@ -24,6 +24,7 @@ RUN pip install /workspace/2d-gaussian-splatting/submodules/diff-surfel-rasteriz
 RUN pip install /workspace/2d-gaussian-splatting/submodules/simple-knn
 
 # Install remaining Python dependencies
-RUN pip install plyfile tqdm open3d trimesh lpips scikit-image opencv-python-headless "numpy<2.0"
+RUN pip install plyfile tqdm trimesh lpips scikit-image opencv-python-headless mediapy "numpy<2.0"
+RUN pip install "dash<3" && pip install open3d
 
 CMD ["bash"]
